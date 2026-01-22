@@ -1,4 +1,4 @@
-//go:build cmount && ((linux && cgo) || (darwin && cgo) || (freebsd && cgo) || windows)
+//go:build cmount && ((linux && cgo) || (darwin && cgo) || (freebsd && cgo) || (openbsd && cgo) || windows)
 
 package cmount
 
@@ -209,9 +209,18 @@ func (fsys *FS) Readdir(dirPath string,
 
 	// We can't seek in directories and FUSE should know that so
 	// return an error if ofst is ever set.
+
+	// XXX(mischief): for some reason in openbsd libfuse, readdir is called
+	// with ofst > 0 after ofst == 0. for reasons i don't understand, if we
+	// return ESPIPE here, the readdir appears empty on the mount. but if
+	// we continue on as normal and fullfil the request as normal, it
+	// works.
+
+	/*
 	if ofst > 0 {
 		return -fuse.ESPIPE
 	}
+	*/
 
 	nodes, err := dir.ReadDirAll()
 	if err != nil {

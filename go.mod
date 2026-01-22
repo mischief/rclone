@@ -280,3 +280,5 @@ require (
 	golang.org/x/mobile v0.0.0-20251021151156-188f512ec823
 	golang.org/x/term v0.37.0
 )
+
+replace github.com/winfsp/cgofuse => github.com/mischief/cgofuse v0.0.0-20260122161143-64f3ab83c6df
